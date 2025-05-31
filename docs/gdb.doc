@@ -1,0 +1,23 @@
+
+GDB ne map que les registres r0 -> r32, sp, ic ...
+Pour les registres genre IO ...
+Il faut copier <reg> dans une variable en RAM car les registres I/O comme PORTx
+ne sont pas visibles directement par GDB.
+GDB lit la RAM standard, pas les zones mémoire mappées aux périphériques.
+
+run                         # lance le programme (si supporté)
+continue (ou c)             # continue l'exécution
+step (ou s)                 # entre dans les fonctions (step into)
+next (ou n)                 # exécute la ligne suivante (step over)
+finish                      # termine la fonction en cours
+break main                  # point d'arrêt sur main
+break fichier.c:42          # point d'arrêt à la ligne 42
+break *0x1234               # point d'arrêt à une adresse mémoire
+delete                      # supprime tous les breakpoints
+info breakpoints            # liste des points d’arrêt
+disable N / enable N        # désactiver / activer breakpoint n°
+print var                   # affiche la valeur de la variable
+print/x var                 # en hexa
+x/4xb 0x1234                # examine mémoire : 4 octets hexa à 0x1234
+x/10i $pc                   # affiche 10 instructions à l'adresse actuelle
+info registers              # affiche les registres

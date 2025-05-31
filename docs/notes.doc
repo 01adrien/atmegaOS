@@ -1,0 +1,56 @@
+===========================
+GNU Guix & Modèle déclaratif
+Adapté à ton OS embarqué
+===========================
+
+1. Guix (GNU) - Rappel
+----------------------
+- Guix utilise Guile Scheme pour décrire l'état du système.
+- Tout est déclaré sous forme de blocs de configuration lisibles.
+- Ces blocs sont traduits en actions : installation de services, configuration du système, etc.
+
+Exxemple Guix :
+--------------
+(define %my-config
+  (operating-system
+    (host-name "my-machine")
+    (timezone "Europe/Paris")
+    (users (list (user-account (name "alice") (group "users"))))
+    (services (list (service dhcp-client-service-type)))))
+
+2. Adaptation à ton projet
+---------------------------
+- Tu peux adopter un modèle similaire dans ton langage embarqué fonctionnel.
+- L'idée : décrire les composants à initialiser ou les actions à lancer dans un bloc clair.
+
+Exemple dans ton langage :
+--------------------------
+(defconfig
+  (hostname "sensor-1")
+  (pin-setup
+    (output 13)
+    (input 2))
+  (on-boot
+    (lambda ()
+      (print "System started")
+      (set-interval (lambda () (toggle 13)) 1000))))
+
+Interprétation dans ton OS :
+----------------------------
+- hostname => identifiant du noeud
+- pin-setup => config GPIO
+- on-boot => callback exécuté au démarrage
+- set-interval => ajout d'une tâche répétitive dans l'event loop
+
+3. Pourquoi c'est utile pour toi
+--------------------------------
+- Simplicité d'utilisation pour l'utilisateur final.
+- Facile à parser et interpréter même sans VM complexe.
+- Fonctionne bien avec ton modèle :
+  - OS mono-thread
+  - event loop coopérative
+  - pas de séparation kernel/user
+- Donne une structure claire à ton OS
+  → proche d’un système configurable comme Guix, mais ultra-léger.
+
+===========================

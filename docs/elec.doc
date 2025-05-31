@@ -1,0 +1,13 @@
+
+TRI STATE
+
+Tri-state (ou haute impédance) est un mode où une broche ne fournit aucun signal, comme si elle était déconnectée.
+Il est utilisé pour éviter les conflits sur des lignes partagées (ex: bus de données).
+Une broche tri-state ne consomme ni ne fournit de courant (très faible impédance).
+Pour mettre une broche en tri-state sur AVR : DDRx = 0, PORTx = 0.
+Utile dans les systèmes avec plusieurs périphériques connectés sur les mêmes lignes.
+Évite les courts-circuits logiques si deux périphériques écrivent en même temps.
+Permet d'économiser de l'énergie sur les broches inutilisées.
+Nécessaire pour le multiplexage de fonctions (entrée/sortie, communication).
+Peut servir de transition sûre entre des états (entrée/sortie haute/basse).
+Essentiel pour une gestion propre et fiable des GPIO dans une lib ou un OS.

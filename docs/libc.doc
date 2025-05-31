@@ -1,0 +1,63 @@
+Résumé : Ce que me fournit avr-libc automatiquement
+
+En compilant avr-gcc sans option spéciale, le compilateur utilise automatiquement 
+la bibliothèque avr-libc. Cette bibliothèque fournit "gratuitement" une série d'outils 
+pour programmer sur un microcontrôleur AVR comme l'ATmega1284P.
+
+Fonctions standard en C
+
+    - Fonctions mémoire : memcpy, memset, memcmp
+    - Fonctions chaînes : strlen, strcpy, strcmp
+    - Fonctions math : abs, labs, div, ldiv
+    - Fonctions de conversion : atoi, itoa, strtol, etc.
+    - Fonctions d’entrée/sortie de base : printf, puts, sprintf (version légère)
+
+Initialisation automatique
+
+    - Configuration de la pile (stack)
+    - Effacement de la section .bss (variables globales non initialisées)
+    - Copie des variables initialisées dans .data
+    - Appel automatique de la fonction main()
+    - Appel de exit() à la fin (ou boucle infinie si exit n’est pas redéfini)
+
+Headers et macros spécifiques AVR 
+
+    - NON UTILISE 
+
+Gestion simplifiée des interruptions
+
+    - NON UTILISE
+    
+Linking automatique
+
+    - avr-gcc lie automatiquement la libc (libc.a) et le code de démarrage (crt0.o)
+    - Pas besoin de définir manuellement un point d’entrée ou une stack si j’utilise main()
+
+Conclusion :
+avr-libc permet de démarrer rapidement, avec un environnement complet. 
+Elle est idéale pour prototyper mon kernel ou OS. 
+Plus tard, je pourrai la désactiver (avec -nostdlib -nostartfiles) 
+pour tout contrôler moi-même et écrire mon propre code d’initialisation, la stack...
+Le fichier crt0.o (C runtime zero) est un petit morceau de code assembleur fourni par la 
+toolchain avr-gcc qui joue un rôle crucial dans le démarrage d’un programme embarqué.
+
+. "Embedded C Programming and the Atmel AVR" — Barnett, Cox, O'Cull
+
+
+
+
+libatmega/vectors.o:libatmega/vectors.S:5: multiple definition of `__vectors'
+/usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr51/crtatmega1284p.o:(.vectors+0x0): first defined here
+collect2: error: ld returned 1 exit status
+
+
+1er essae de redefinition des vecteurs d'interruptions
+ECHEC, pour faire ca il faut redefinir tout le startup
+
+crtatmega1284p.o: le runtime c de base qui initie stack, heap, interrupt ...
+
+
+avr-nm -S --print-file-name firmware.elf | grep __vector_1
+
+
+avr-gcc -mmcu=atmega1284p -print-file-name=ldscript/avr5.x

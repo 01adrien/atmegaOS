@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "AVR GDB Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/firmware.elf",
+            "miDebuggerPath": "/usr/bin/avr-gdb",
+            "miDebuggerServerAddress": "localhost:4242",
+            "cwd": "${workspaceFolder}",
+            "targetArchitecture": "avr",
+            "stopAtEntry": true,
+            "externalConsole": false,
+            "MIMode": "gdb"
+        }
+    ]
+}

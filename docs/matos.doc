@@ -1,0 +1,14 @@
+Liste du matériel pour commencer: 
+    - 1 x Microcontrôleur ATmega1284P-PU (40 pins DIP)
+    - 1 x Breadboard (planche à pain)
+    - 1 x Quartz 16 MHz
+    - 2 x Condensateurs céramiques 22 pF (pour le quartz)
+    - 1 x Résistance 10 kΩ (pull-up pour la broche RESET)
+    - 1 x Bouton poussoir (pour reset manuel)
+    - 1 x Condensateur céramique 100 nF (découplage alimentation)
+    - Fils de connexion (jumpers)
+    - 1 x Alimentation 5 V stable (ou module USB 5V)
+    - 1 x Programmateur ISP USBasp (pour flasher la puce)
+    - Optionnel : Module UART-USB (ex : FTDI ou CP2102) (pour communication série / débogage)
+    - Quelques LEDs + résistances 220 Ω (pour tests simples)
+    - DS3231 pour real time clock en I²C 
