@@ -11,4 +11,5 @@ Liste du matériel pour commencer:
     - 1 x Programmateur ISP USBasp (pour flasher la puce)
     - Optionnel : Module UART-USB (ex : FTDI ou CP2102) (pour communication série / débogage)
     - Quelques LEDs + résistances 220 Ω (pour tests simples)
-    - DS3231 pour real time clock en I²C 
+    - 1 x DS3231 pour real time clock en I²C 
+    

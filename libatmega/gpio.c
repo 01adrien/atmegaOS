@@ -7,12 +7,12 @@
 // l'idee c'est de lire la config (mode + pupd) pour le port complet
 // et de set la nouvelle conf pour les bits concernés
 
-void gpio_set_af(uint8_t gpio_port, enum af_mode mode, uint8_t pin)
+void gpio_set_af(uint8_t gpio_port, GpioAf afmode, uint8_t pin)
 {
     // TODO
 }
 
-void gpio_mode_setup(uint8_t reg, enum gpio_mode mode, uint8_t pin)
+void gpio_mode_setup(uint8_t reg, GpioMode mode, uint8_t pin)
 {
     volatile uint8_t *ddr = (volatile uint8_t *)(uintptr_t)reg;
     volatile uint8_t *port = (volatile uint8_t *)(uintptr_t)(reg + 1);
@@ -38,6 +38,10 @@ void gpio_mode_setup(uint8_t reg, enum gpio_mode mode, uint8_t pin)
         *port |= (1 << pin); // Pull-up activé
         break;
 
+    case GPIO_MODE_AF:
+        // TODO
+        break;
+
     default:
         break; // mode inconnu → ne rien faire
     }
@@ -46,13 +50,13 @@ void gpio_mode_setup(uint8_t reg, enum gpio_mode mode, uint8_t pin)
 // active la <pin> du <reg> PORTx
 void gpio_set(uint8_t reg, uint8_t pin)
 {
-    MMIO(reg) |= (1 << pin);
+    MMIO8(reg) |= (1 << pin);
 }
 
 // desactive la <pin> du <reg> PORTx
 void gpio_clear(uint8_t reg, uint8_t pin)
 {
-    MMIO(reg) &= ~(1 << pin);
+    MMIO8(reg) &= ~(1 << pin);
 }
 
 /*
@@ -65,24 +69,24 @@ il faut insérer un NOP pour garantir que la lecture reflète bien la dernière 
 // retourne la valeur logique de la <pin> du <reg> PINx
 uint8_t gpio_get(uint8_t reg, uint8_t pin)
 {
-    return (MMIO(reg) & (1 << pin)) ? 1 : 0;
+    return (MMIO8(reg) & (1 << pin)) ? 1 : 0;
 }
 
 // toggle la valeur logique de la <pin> du <reg> PORTx
 void gpio_toggle(uint8_t reg, uint8_t pin)
 {
-    MMIO(reg) ^= (1 << pin);
+    MMIO8(reg) ^= (1 << pin);
 }
 
 // retourne un entier de 8 bits où chaque bit représente
 // l’état logique des pins du <reg> PINx
 uint8_t gpio_pins_read(uint8_t reg)
 {
-    return MMIO(reg);
+    return MMIO8(reg);
 }
 
 // ecrit d'un coup sur toutes les broches du <reg> PORTx
 void gpio_port_write(uint8_t reg, uint8_t data)
 {
-    MMIO(reg) = data;
+    MMIO8(reg) = data;
 }

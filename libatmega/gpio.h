@@ -19,29 +19,30 @@ volatile informe le compilateur que la valeur du registre peut changer à tout m
 empêchant toute optimisation qui ignorerait ou réorganiserait les accès mémoire.
 */
 
-enum gpio_mode
+typedef enum
 {
     GPIO_MODE_DISABLE = 0,
     GPIO_MODE_INPUT,
     GPIO_MODE_OUTPUT,
     GPIO_MODE_INPUT_PULLUP,
-};
+    GPIO_MODE_AF,
+} GpioMode;
 
-enum pupd_mode
+typedef enum
 {
-    PUPD_ENABLE = 0,
-    PUPD_DISABLE,
-};
+    GPIO_PUPD_ENABLE = 0,
+    GPIO_PUPD_DISABLE,
+} GpioPupd;
 
-// fonction alternative pour gpio
-enum af_mode
+// fonction alternative pour gpio (UART, PWM...)
+typedef enum
 {
     GPIO_AF1,
     // ....
-};
+} GpioAf;
 
-void gpio_set_af(uint8_t gpio_port, enum af_mode mode, uint8_t pin);
-void gpio_mode_setup(uint8_t gpio_port, enum gpio_mode mode, uint8_t pin);
+void gpio_set_af(uint8_t gpio_port, GpioAf afmode, uint8_t pin);
+void gpio_mode_setup(uint8_t gpio_port, GpioMode mode, uint8_t pin);
 void gpio_set(uint8_t gpio_port, uint8_t pin);
 void gpio_clear(uint8_t gpio_port, uint8_t pin);
 uint8_t gpio_get(uint8_t gpio_port, uint8_t pin);

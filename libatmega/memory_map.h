@@ -1,32 +1,55 @@
 /*
- * memory_map.h
- *
- * Définition des adresses mémoire des registres matériels (IO)
- * pour les périphériques du microcontrôleur (Timers, GPIO, etc.).
- *
- * Ce fichier fournit également la macro MMIO pour un accès type-safe
- * aux registres mémoire-mappés.
- */
+memory_map.h
+
+Définition des adresses mémoire des registres matériels (IO)
+pour les périphériques du microcontrôleur (Timers, GPIO, etc.).
+
+Ce fichier fournit également la macro MMIO8 et MMIO16 pour un accès type-safe
+aux registres mémoire-mappés.
+
+La mémoire mappée (Memory-Mapped I/O) est une technique où les périphériques
+sont accessibles via des adresses mémoire normales.
+Le processeur lit et écrit ces adresses comme de la mémoire,
+mais les données sont interprétées comme des commandes ou
+des informations spécifiques aux périphériques.
+*/
 
 #if !defined(_MEMORY_MAP_H_)
 #define _MEMORY_MAP_H_
 
 #include <stdint.h>
+#include <stddef.h>
 
-#define MMIO(addr) (*(volatile uint8_t *)(uintptr_t)(addr))
+/*
+La macro MMIOX(addr) retourne une lvalue (référence mémoire modifiable)
+pointant vers l’adresse addr. Cela permet de lire ou modifier directement
+un registre matériel comme une variable classique.
+*/
+#define MMIO8(addr) (*(volatile uint8_t *)(uintptr_t)(addr))
+#define MMIO16(addr) (*(volatile uint16_t *)(uintptr_t)(addr))
 
 // Power Reduction Register 0
 #define PRR0 (0x64)
-#define PRTIM0 (6)
+#define PRTIM0 (5)
+#define PRTIM2 (6)
 
 // Timer / Counter 0
 #define TIFR0 (0x35)
 #define TCCR0A (0x44)
 #define TCCR0B (0x45)
 #define TCNT0 (0x46)
-#define OCROB (0x47)
-#define OCROA (0x48)
+#define OCR0A (0x47)
+#define OCR0B (0x48)
 #define TIMSK0 (0x6E)
+
+// Timer / Counter 2
+#define TIFR2 (0x37)
+#define TCCR2A (0xB0)
+#define TCCR2B (0xB1)
+#define TCNT2 (0xB2)
+#define OCR2A (0xB3)
+#define OCR2B (0xB4)
+#define TIMSK2 (0x70)
 
 // GPIO
 #define PINA (0x20)

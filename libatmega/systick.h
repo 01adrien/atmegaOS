@@ -48,5 +48,6 @@ PWM et signaux:
 void systick_init(void);
 uint64_t get_tick(void);
 void systick_increment(void);
+void systick_register_hook(void (*callback)(void));
 
 #endif // _SYSTICK_H_

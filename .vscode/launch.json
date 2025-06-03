@@ -2,17 +2,24 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "AVR GDB Debug",
+            "name": "Debug AVR with simavr",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/firmware.elf",
             "miDebuggerPath": "/usr/bin/avr-gdb",
-            "miDebuggerServerAddress": "localhost:4242",
-            "cwd": "${workspaceFolder}",
-            "targetArchitecture": "avr",
+            "miDebuggerServerAddress": "localhost:1234",
             "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
             "externalConsole": false,
-            "MIMode": "gdb"
+            "MIMode": "gdb",
+            "targetArchitecture": "avr",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         }
     ]
 }

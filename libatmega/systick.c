@@ -1,22 +1,6 @@
 #include "systick.h"
 #include "interrupt.h"
-
-// TCCR0A
-#define WGM00 (0)
-#define WGM01 (1)
-#define COM0B0 (4)
-#define COM0B1 (5)
-#define COM0A0 (6)
-#define COM0A1 (7)
-// TCCR0B
-#define CS00 (0)
-#define CS01 (1)
-#define CS02 (2)
-#define WGM02 (3)
-// TIMSK0
-#define TOIE0 (0)
-#define OCIEA (1)
-#define OCIEB (2)
+#include "counter.h"
 
 /*
 Calcul du prescaler
@@ -27,20 +11,29 @@ Ncounts = 256 (max 8bit + 1)
 prescaler (clk / 64), compte de 0 => 255 en 1.24ms
 
 pour plus de precision dans le timer changer en mode CTC (Clear Timer on Compare Match)
+ou utiliser une reload value
 */
+
+void timer0_ovf_handler(void)
+{
+    systick_increment();
+}
+
+void timer2_ovf_handler(void)
+{
+    systick_increment();
+}
 
 void systick_init(void)
 {
-    // active timer 0 (pas utile pour simulide)
-    MMIO(PRR0) &= ~(1 << PRTIM0);
-    // config mode normal sur timer overflow a 255
-    MMIO(TCCR0A) &= ~((1 << WGM00) | (1 << WGM01));
-    MMIO(TCCR0B) &= ~(1 << WGM02);
-    // config du prescaler 64
-    MMIO(TCCR0B) &= ~((1 << CS02) | (1 << CS01) | (1 << CS00)); // clear prescaler bits
-    MMIO(TCCR0B) |= (1 << CS01) | (1 << CS00);                  // prescaler 64
-    // activation interruption sur l'overflow
-    MMIO(TIMSK0) |= (1 << TOIE0);
+    CounterId c = COUNTER0;
+    CounterMode m = COUNTER_MODE_NORMAL;
+    CounterPrescaler p = COUNTER_PRESCALER_64;
+    counter_enable_clock(c);
+    counter_reset(c);
+    counter_set_mode(c, m);
+    counter_enable_interrupt(c, m);
+    counter_set_prescaler(c, p);
     interrupt_enable();
 }
 
@@ -57,7 +50,91 @@ uint64_t get_tick(void)
     return t;
 }
 
+static void (*systick_hook)(void) = NULL;
+
+void systick_register_hook(void (*callback)(void))
+{
+    systick_hook = callback;
+}
+
 inline void systick_increment(void)
 {
     tick++;
+    if (systick_hook)
+        systick_hook();
 }
+
+/*
+===========================
+ EXEMPLE DE CALCUL TIMER
+===========================
+
+Microcontrôleur : générique (8 bits)
+Fréquence d’horloge (F_CPU) : 6 MHz
+Prescaler utilisé : 8
+Timer : 8 bits → Max_count = 256
+Délai souhaité : 300 microsecondes (µs)
+
+---------------------------
+ ÉTAPE 1 : Calcul du tick
+---------------------------
+
+Tick_duration = Prescaler / F_CPU
+               = 8 / 6 000 000
+               = 1.33 µs
+
+Chaque tick du timer dure 1.33 microseconde.
+
+-------------------------------
+ ÉTAPE 2 : Nombre de ticks requis
+-------------------------------
+
+Counts_needed = Delay_time / Tick_duration
+               = 300 µs / 1.33 µs
+               ≈ 225 ticks
+
+Il faut compter 225 ticks pour atteindre 300 µs.
+
+-------------------------------
+ ÉTAPE 3 : Calcul de la valeur de rechargement
+-------------------------------
+
+Reload_value = Max_count – Counts_needed
+             = 256 – 225
+             = 31
+
+Il faut charger le timer avec la valeur 31.
+Ainsi, il comptera de 31 jusqu'à 256 → soit 225 ticks → soit 300 µs.
+
+--------------------------------
+ UTILISATION DANS UNE ROUTINE
+--------------------------------
+
+- Initialiser le timer à 31 dans l'ISR.
+- À chaque débordement (= 300 µs), incrémenter une variable globale.
+- Quand cette variable atteint 1666 :
+    1666 × 300 µs = 499.8 ms ≈ 500 ms
+    → effectuer l’action (ex. : changer état d’une LED).
+
+--------------------------------
+ FORMULE GÉNÉRALE
+--------------------------------
+
+Reload_value = Max_count – (Delay_time / (Prescaler / F_CPU))
+
+Ou, en microsecondes :
+
+Reload_value = Max_count – (Delay_µs / (Prescaler / (F_CPU / 1_000_000)))
+
+--------------------------------
+ EXEMPLE RAPIDE POUR RÉUTILISATION
+--------------------------------
+
+- F_CPU = 12 MHz
+- Prescaler = 64
+- Delay = 500 µs
+
+→ Tick = 64 / 12 000 000 = 5.33 µs
+→ Counts_needed = 500 / 5.33 ≈ 94
+→ Reload_value = 256 – 94 = 162
+*/

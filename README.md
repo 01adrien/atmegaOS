@@ -4,7 +4,7 @@
 
 Développer un **système d’exploitation embarqué minimaliste** pour microcontrôleur ATmega, comprenant :
 - un **noyau en C pur sans bibliothèque externe**,
-- un **langage fonctionnel interprété** (type Lisp/Scala),
+- un **langage fonctionnel interprété** (type Lisp),
 - une **interface REPL** via UART,
 - un **système de fichiers simplifié** (EEPROM ou RAM),
 - une **event loop asynchrone** pour gérer du pseudo-multitâche.
