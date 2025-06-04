@@ -1,13 +1,11 @@
 #include <libatmega/systick.h>
 #include <libatmega/gpio.h>
+#include <libatmega/usart.h>
 #include <kernel/timer.h>
-#include <stddef.h>
-
-#define FCPU (16000000)
 
 #define PIN (2)
-
 #define PORT (PORTA)
+#define BAUD_RATE (9600)
 
 void test_interrupt()
 {
@@ -54,9 +52,20 @@ void test_timer()
     }
 }
 
+void test_usart()
+{
+    UsartId u = USART0;
+    usart_enable_clock(u);
+    usart_set_databits(u, USART_DATA_BITS_8);
+    usart_set_baudrate(u, BAUD_RATE);
+    usart_set_mode(u, USART_MODE_ASYNC);
+    usart_enable_interrupt(u);
+    usart_enable(u);
+}
+
 int main(void)
 {
     systick_init();
-    test_interrupt();
+    // test_interrupt();
     // test_timer();
 }

@@ -30,8 +30,10 @@ un registre matériel comme une variable classique.
 
 // Power Reduction Register 0
 #define PRR0 (0x64)
-#define PRTIM0 (5)
 #define PRTIM2 (6)
+#define PRTIM0 (5)
+#define PRUSART1 (4)
+#define PRUSART0 (1)
 
 // Timer / Counter 0
 #define TIFR0 (0x35)
@@ -68,5 +70,23 @@ un registre matériel comme une variable classique.
 // Status Register
 #define SREG (0x5f)
 #define I (7)
+
+// USART 0
+#define USART0_BASE (0xC0)
+// #define UCSR0A (0xC0)
+// #define UCSR0B (0xC1)
+// #define UCSR0C (0xC2)
+// #define UBRR0H (0xC4)
+// #define UBRR0L (0xC5)
+// #define UDR0 (0xC6)
+
+// USART 1
+#define USART1_BASE (0xC8)
+// #define UCSR1A (0xC8)
+// #define UCSR1B (0xCC)
+// #define UCSR1C (0xCA)
+// #define UBRR1H (0xCC)
+// #define UBRR1L (0xCD)
+// #define UDR1 (0xCE)
 
 #endif // _MEMORY_MAP_H_

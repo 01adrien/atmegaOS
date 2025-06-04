@@ -20,7 +20,6 @@ typedef enum
 {
     COUNTER0,
     COUNTER2,
-    COUNTER_MAX
 } CounterId;
 
 typedef enum

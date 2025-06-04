@@ -65,7 +65,6 @@ void counter_set_mode(CounterId id, CounterMode mode)
 void counter_enable_interrupt(CounterId id, uint8_t mask)
 {
     Counter8 *c = &counters[id];
-    // MMIO8(c->timsk) |= ((1 << TOIE) | (1 << OCIEA) | (1 << OCIEB));
     MMIO8(c->timsk) |= mask;
 }
 
