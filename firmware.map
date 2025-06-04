@@ -243,7 +243,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000     0x1bd4
+.text           0x0000000000000000     0x1df6
  *(.vectors)
  .vectors       0x0000000000000000       0x8c /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr51/crtatmega1284p.o
                 0x0000000000000000                __vectors
@@ -314,83 +314,90 @@ END GROUP
                 0x0000000000000234                timer_get
                 0x000000000000024a                timer_tick
                 0x00000000000002f0                timer_poll
- .text          0x00000000000003c0      0x32e libatmega/counter.o
+ .text          0x00000000000003c0      0x4a6 libatmega/counter.o
                 0x00000000000003c0                counter_enable_clock
-                0x000000000000042a                counter_reset
-                0x0000000000000474                counter_set_mode
-                0x0000000000000528                counter_enable_interrupt
-                0x0000000000000598                counter_set_prescaler
- .text          0x00000000000006ee      0x332 libatmega/gpio.o
-                0x00000000000006ee                gpio_set_af
-                0x0000000000000712                gpio_mode_setup
-                0x00000000000008be                gpio_set
-                0x0000000000000906                gpio_clear
-                0x0000000000000950                gpio_get
-                0x0000000000000994                gpio_toggle
-                0x00000000000009dc                gpio_pins_read
-                0x00000000000009fa                gpio_port_write
- .text          0x0000000000000a20      0xc54 libatmega/interrupt.o
-                0x0000000000000a5a                usart0_rx_handler
-                0x0000000000000a6e                usart0_udre_handler
-                0x0000000000000a82                usart0_tx_handler
-                0x0000000000000a96                usart1_rx_handler
-                0x0000000000000aaa                usart1_udre_handler
-                0x0000000000000abe                usart1_tx_handler
-                0x0000000000000ad2                __vector_1
-                0x0000000000000b38                __vector_2
-                0x0000000000000b9e                __vector_3
-                0x0000000000000c04                __vector_4
-                0x0000000000000c6a                __vector_5
-                0x0000000000000cd0                __vector_6
-                0x0000000000000d36                __vector_7
-                0x0000000000000d9c                __vector_8
-                0x0000000000000e02                __vector_9
-                0x0000000000000e68                __vector_10
-                0x0000000000000ece                __vector_11
-                0x0000000000000f34                __vector_12
-                0x0000000000000f9a                __vector_13
-                0x0000000000001000                __vector_14
-                0x0000000000001066                __vector_15
-                0x00000000000010cc                __vector_16
-                0x0000000000001132                __vector_17
-                0x0000000000001198                __vector_18
-                0x00000000000011fe                __vector_19
-                0x0000000000001264                __vector_20
-                0x00000000000012ca                __vector_21
-                0x0000000000001330                __vector_22
-                0x0000000000001396                __vector_23
-                0x00000000000013fc                __vector_24
-                0x0000000000001462                __vector_25
-                0x00000000000014c8                __vector_26
-                0x000000000000152e                __vector_27
-                0x0000000000001594                __vector_28
-                0x00000000000015fa                __vector_29
-                0x0000000000001660                __vector_30
- .text          0x0000000000001674      0x23e libatmega/systick.o
-                0x0000000000001698                timer0_ovf_handler
-                0x00000000000016ac                timer2_ovf_handler
-                0x00000000000016c0                systick_init
-                0x0000000000001730                get_tick
-                0x00000000000017de                systick_register_hook
-                0x0000000000001804                systick_increment
- .text          0x00000000000018b2      0x2f4 main.o
-                0x00000000000018b2                test_interrupt
-                0x00000000000019d2                callback1
-                0x0000000000001a42                callback2
-                0x0000000000001ab2                callback3
-                0x0000000000001b22                test_timer
-                0x0000000000001b8c                main
-                0x0000000000001ba6                . = ALIGN (0x2)
+                0x000000000000042e                counter_reset
+                0x000000000000047c                counter_set_mode
+                0x0000000000000558                counter_enable_interrupt
+                0x00000000000005c2                counter_disable_interrupt
+                0x0000000000000630                counter_set_prescaler
+                0x000000000000078a                counter_set_oc_value
+                0x0000000000000810                counter_set_ctc_top
+ .text          0x0000000000000866      0x332 libatmega/gpio.o
+                0x0000000000000866                gpio_set_af
+                0x000000000000088a                gpio_mode_setup
+                0x0000000000000a36                gpio_set
+                0x0000000000000a7e                gpio_clear
+                0x0000000000000ac8                gpio_get
+                0x0000000000000b0c                gpio_toggle
+                0x0000000000000b54                gpio_pins_read
+                0x0000000000000b72                gpio_port_write
+ .text          0x0000000000000b98      0xca4 libatmega/interrupt.o
+                0x0000000000000c22                usart0_rx_handler
+                0x0000000000000c36                usart0_udre_handler
+                0x0000000000000c4a                usart0_tx_handler
+                0x0000000000000c5e                usart1_rx_handler
+                0x0000000000000c72                usart1_udre_handler
+                0x0000000000000c86                usart1_tx_handler
+                0x0000000000000c9a                __vector_1
+                0x0000000000000d00                __vector_2
+                0x0000000000000d66                __vector_3
+                0x0000000000000dcc                __vector_4
+                0x0000000000000e32                __vector_5
+                0x0000000000000e98                __vector_6
+                0x0000000000000efe                __vector_7
+                0x0000000000000f64                __vector_8
+                0x0000000000000fca                __vector_9
+                0x0000000000001030                __vector_10
+                0x0000000000001096                __vector_11
+                0x00000000000010fc                __vector_12
+                0x0000000000001162                __vector_13
+                0x00000000000011c8                __vector_14
+                0x000000000000122e                __vector_15
+                0x0000000000001294                __vector_16
+                0x00000000000012fa                __vector_17
+                0x0000000000001360                __vector_18
+                0x00000000000013c6                __vector_19
+                0x000000000000142c                __vector_20
+                0x0000000000001492                __vector_21
+                0x00000000000014f8                __vector_22
+                0x000000000000155e                __vector_23
+                0x00000000000015c4                __vector_24
+                0x000000000000162a                __vector_25
+                0x0000000000001690                __vector_26
+                0x00000000000016f6                __vector_27
+                0x000000000000175c                __vector_28
+                0x00000000000017c2                __vector_29
+                0x0000000000001828                __vector_30
+ .text          0x000000000000183c      0x298 libatmega/systick.o
+                0x0000000000001860                timer0_ovf_handler
+                0x0000000000001874                timer2_ovf_handler
+                0x0000000000001888                timer0_compb_handler
+                0x000000000000189c                timer0_compa_handler
+                0x00000000000018b0                timer2_compa_handler
+                0x00000000000018c4                timer2_compb_handler
+                0x00000000000018d8                systick_init
+                0x0000000000001952                get_tick
+                0x0000000000001a00                systick_register_hook
+                0x0000000000001a26                systick_increment
+ .text          0x0000000000001ad4      0x2f4 main.o
+                0x0000000000001ad4                test_interrupt
+                0x0000000000001bf4                callback1
+                0x0000000000001c64                callback2
+                0x0000000000001cd4                callback3
+                0x0000000000001d44                test_timer
+                0x0000000000001dae                main
+                0x0000000000001dc8                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x0000000000001ba6       0x18 /usr/lib/gcc/avr/5.4.0/avr51/libgcc.a(_adddi3_s8.o)
-                0x0000000000001ba6                __adddi3_s8
- .text.libgcc   0x0000000000001bbe       0x12 /usr/lib/gcc/avr/5.4.0/avr51/libgcc.a(_subdi3.o)
-                0x0000000000001bbe                __subdi3
-                0x0000000000001bd0                . = ALIGN (0x2)
+ .text.libgcc   0x0000000000001dc8       0x18 /usr/lib/gcc/avr/5.4.0/avr51/libgcc.a(_adddi3_s8.o)
+                0x0000000000001dc8                __adddi3_s8
+ .text.libgcc   0x0000000000001de0       0x12 /usr/lib/gcc/avr/5.4.0/avr51/libgcc.a(_subdi3.o)
+                0x0000000000001de0                __subdi3
+                0x0000000000001df2                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000001bd0        0x0 /usr/lib/gcc/avr/5.4.0/avr51/libgcc.a(_exit.o)
-                0x0000000000001bd0                exit
-                0x0000000000001bd0                _exit
+ .fini9         0x0000000000001df2        0x0 /usr/lib/gcc/avr/5.4.0/avr51/libgcc.a(_exit.o)
+                0x0000000000001df2                exit
+                0x0000000000001df2                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -409,41 +416,41 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000001bd0        0x4 /usr/lib/gcc/avr/5.4.0/avr51/libgcc.a(_exit.o)
+ .fini0         0x0000000000001df2        0x4 /usr/lib/gcc/avr/5.4.0/avr51/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000001bd4                _etext = .
+                0x0000000000001df6                _etext = .
 
-.data           0x0000000000800100        0xa address de chargement 0x0000000000001bd4
+.data           0x0000000000800100        0xe address de chargement 0x0000000000001df6
                 0x0000000000800100                PROVIDE (__data_start, .)
  *(.data)
- .data          0x0000000000800100        0xa libatmega/counter.o
+ .data          0x0000000000800100        0xe libatmega/counter.o
  *(.data*)
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.r*)
-                0x000000000080010a                . = ALIGN (0x2)
-                0x000000000080010a                _edata = .
-                0x000000000080010a                PROVIDE (__data_end, .)
+                0x000000000080010e                . = ALIGN (0x2)
+                0x000000000080010e                _edata = .
+                0x000000000080010e                PROVIDE (__data_end, .)
 
-.bss            0x000000000080010a       0x9c
-                0x000000000080010a                PROVIDE (__bss_start, .)
+.bss            0x000000000080010e       0x9c
+                0x000000000080010e                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x000000000080010a        0x2 kernel/timer.o
- .bss           0x000000000080010c        0xa libatmega/systick.o
+ .bss           0x000000000080010e        0x2 kernel/timer.o
+ .bss           0x0000000000800110        0xa libatmega/systick.o
  *(.bss*)
  *(COMMON)
- COMMON         0x0000000000800116       0x90 kernel/timer.o
-                0x0000000000800116                timers
-                0x00000000008001a6                PROVIDE (__bss_end, .)
-                0x0000000000001bd4                __data_load_start = LOADADDR (.data)
-                0x0000000000001bde                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x000000000080011a       0x90 kernel/timer.o
+                0x000000000080011a                timers
+                0x00000000008001aa                PROVIDE (__bss_end, .)
+                0x0000000000001df6                __data_load_start = LOADADDR (.data)
+                0x0000000000001e04                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00000000008001a6        0x0
+.noinit         0x00000000008001aa        0x0
                 [!provide]                        PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                        PROVIDE (__noinit_end, .)
-                0x00000000008001a6                _end = .
+                0x00000000008001aa                _end = .
                 [!provide]                        PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0
@@ -465,23 +472,23 @@ END GROUP
 .user_signatures
  *(.user_signatures*)
 
-.stab           0x0000000000000000     0x34ec
+.stab           0x0000000000000000     0x3894
  *(.stab)
  .stab          0x0000000000000000      0x984 kernel/timer.o
- .stab          0x0000000000000984      0x75c libatmega/counter.o
-                                        0x90c (taille avant relaxe)
- .stab          0x00000000000010e0      0x804 libatmega/gpio.o
+ .stab          0x0000000000000984      0x978 libatmega/counter.o
+                                        0xb28 (taille avant relaxe)
+ .stab          0x00000000000012fc      0x804 libatmega/gpio.o
                                         0x9c0 (taille avant relaxe)
- .stab          0x00000000000018e4      0xe88 libatmega/interrupt.o
-                                        0xf0c (taille avant relaxe)
- .stab          0x000000000000276c      0x6a8 libatmega/systick.o
-                                        0x8f4 (taille avant relaxe)
- .stab          0x0000000000002e14      0x6d8 main.o
+ .stab          0x0000000000001b00      0xeb8 libatmega/interrupt.o
+                                       0x102c (taille avant relaxe)
+ .stab          0x00000000000029b8      0x804 libatmega/systick.o
+                                        0xa50 (taille avant relaxe)
+ .stab          0x00000000000031bc      0x6d8 main.o
                                         0x8a0 (taille avant relaxe)
 
-.stabstr        0x0000000000000000     0x1f5e
+.stabstr        0x0000000000000000     0x2089
  *(.stabstr)
- .stabstr       0x0000000000000000     0x1f5e kernel/timer.o
+ .stabstr       0x0000000000000000     0x2089 kernel/timer.o
 
 .stab.excl
  *(.stab.excl)

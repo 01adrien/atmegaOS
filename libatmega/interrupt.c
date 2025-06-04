@@ -55,13 +55,13 @@ void __vector_8(void)
 // Timer/Counter2 Compare Match A : correspondance avec OCR2A
 void __vector_9(void)
 {
-    null_handler();
+    timer2_compa_handler();
 }
 
 // Timer/Counter2 Compare Match B : correspondance avec OCR2B
 void __vector_10(void)
 {
-    null_handler();
+    timer2_compb_handler();
 }
 
 // Timer/Counter2 Overflow : dépassement de valeur maximale du timer 2
@@ -97,13 +97,13 @@ void __vector_15(void)
 // Timer/Counter0 Compare Match A : correspondance avec OCR0A
 void __vector_16(void)
 {
-    null_handler();
+    timer0_compa_handler();
 }
 
 // Timer/Counter0 Compare Match B : correspondance avec OCR0B
 void __vector_17(void)
 {
-    null_handler();
+    timer0_compb_handler();
 }
 
 // Timer/Counter0 Overflow : dépassement de valeur maximale du timer 0

@@ -24,15 +24,36 @@ void timer2_ovf_handler(void)
     systick_increment();
 }
 
+void timer0_compb_handler(void)
+{
+    systick_increment();
+}
+
+void timer0_compa_handler(void)
+{
+    systick_increment();
+}
+
+void timer2_compa_handler(void)
+{
+    systick_increment();
+}
+
+void timer2_compb_handler(void)
+{
+    systick_increment();
+}
+
 void systick_init(void)
 {
     CounterId c = COUNTER0;
-    CounterMode m = COUNTER_MODE_NORMAL;
+    CounterMode m = COUNTER_MODE_CTC;
     CounterPrescaler p = COUNTER_PRESCALER_64;
     counter_enable_clock(c);
     counter_reset(c);
     counter_set_mode(c, m);
-    counter_enable_interrupt(c, m);
+    counter_set_ctc_top(c, 249);
+    counter_enable_interrupt(c, COUNTER_INT_OCB);
     counter_set_prescaler(c, p);
     interrupt_enable();
 }
