@@ -36,7 +36,6 @@ static volatile uint8_t tx_busy; // drapeau = 1 si un envoi est en cours
 void usart0_rx_handler(void)
 {
     // check pour erreur
-    Usart *u = usarts[USART0];
     uint8_t data = usarts[USART0]->udr; // lit UDR0 → efface RXC0
     rx_byte = data;
     rx_ready = 1;
@@ -117,22 +116,6 @@ void usart_set_format(UsartId id, UsartFrameFormat format)
     }
 }
 
-void usart_set_databits(UsartId id, UsartDataBits bits)
-{
-    Usart *u = usarts[id];
-
-    // reset data bits
-    u->ucsrb &= ~(1 << UCSZ2);
-    u->ucsrc &= ~((1 << UCSZ1) | (1 << UCSZ0));
-
-    if (bits & (1 << 2))
-        u->ucsrb |= (1 << UCSZ2);
-    if (bits & (1 << 1))
-        u->ucsrc |= (1 << UCSZ1);
-    if (bits & (1 << 0))
-        u->ucsrc |= (1 << UCSZ0);
-}
-
 void usart_set_baudrate(UsartId id, uint32_t baudrate)
 {
     Usart *u = usarts[id];
@@ -209,19 +192,19 @@ void usart_enable(UsartId id)
     usart->ucsrb |= ((1 << RXEN) | (1 << TXEN));
 }
 
-uint8_t usart_read(UsartId id, uint8_t *data)
+uint8_t usart_read_byte(UsartId id)
 {
     Usart *u = usarts[id];
     if (!rx_ready)
         return 0;
     interrupt_disable();
-    *data = rx_byte;
+    uint8_t data = rx_byte;
     rx_ready = 0;
     interrupt_enable();
-    return 1;
+    return data;
 }
 
-void usart_write(UsartId id, uint8_t data)
+void usart_write_byte(UsartId id, uint8_t data)
 {
     while (tx_busy)
         __asm__("nop");
@@ -230,4 +213,9 @@ void usart_write(UsartId id, uint8_t data)
     tx_busy = 1;
     usart_enable_udre_interrupt(id);
     interrupt_enable();
+}
+
+uint8_t usart_data_available()
+{
+    return rx_ready;
 }

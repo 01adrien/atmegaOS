@@ -102,16 +102,17 @@ void usart_enable_interrupt(UsartId id);
 void usart_enable_udre_interrupt(UsartId id);
 void usart_disable_udre_interrupt(UsartId id);
 void usart_enable(UsartId id);
-uint8_t usart_read(UsartId id, uint8_t *data);
-void usart_write(UsartId id, uint8_t data);
+uint8_t usart_read_byte(UsartId id);
+void usart_write_byte(UsartId id, uint8_t byte);
 
+uint8_t usart_data_available();
 #endif // _USART_H_
 
 /*
 Exemple : configurer sim-avr pour l’USART
 Avec sim-avr, tu peux utiliser l’option -u pour connecter l’USART1 à un pseudo-terminal.
 Par exemple, lancer sim-avr avec :
-simavr -m atmega328p -f 16000000 -u /dev/pts/3 your_program.elf
+simavr -m atmega1284pp -f 16000000 -u /dev/pts/3 firmware.elf
 Cela redirige l’USART vers /dev/pts/3 (un pseudo-terminal).
 Comment trouver ou créer ce port ?
     Tu peux créer une paire de pseudo-terminaux avec socat :

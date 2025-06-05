@@ -1,5 +1,5 @@
 #include "gpio.h"
-#include <stdio.h>
+
 // selectionne mode pour la <pin> du <reg> DDRx
 // TODO :
 // pull-up mode dans les params
@@ -31,10 +31,6 @@ void gpio_mode_setup(uint8_t reg, GpioMode mode, uint8_t pin)
     case GPIO_MODE_INPUT_PULLUP:
         *ddr &= ~(1 << pin); // Entrée
         *port |= (1 << pin); // Pull-up activé
-        break;
-
-    case GPIO_MODE_AF:
-        // TODO
         break;
 
     default:

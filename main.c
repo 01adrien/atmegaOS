@@ -1,12 +1,12 @@
-#include <libatmega/systick.h>
-#include <libatmega/gpio.h>
-#include <libatmega/usart.h>
-#include <libatmega/interrupt.h>
-#include <kernel/timer.h>
+#include "libatmega/systick.h"
+#include "libatmega/gpio.h"
+#include "libatmega/usart.h"
+#include "libatmega/interrupt.h"
+#include "kernel/timer.h"
 
 #define PIN (2)
 #define PORT (PORTA)
-#define BAUD_RATE (9600)
+#define BAUD_RATE (115200)
 
 void test_interrupt()
 {
@@ -46,11 +46,6 @@ void test_timer()
     timer_start(timer_alloc(), 3000, TIMER_PERIODIC, callback1, NULL);
     timer_start(timer_alloc(), 2000, TIMER_PERIODIC, callback2, NULL);
     timer_start(timer_alloc(), 1000, TIMER_PERIODIC, callback3, NULL);
-
-    while (1)
-    {
-        timer_poll(); // si besoin de gestion non-interruptive
-    }
 }
 
 void test_usart()
@@ -64,6 +59,13 @@ void test_usart()
     usart_enable_interrupt(u);
     usart_enable(u);
     interrupt_enable();
+
+    if (usart_data_available())
+    {
+        uint8_t data_rx = usart_read_byte(u);
+        uint8_t data_tx = data_rx + 5;
+        usart_write_byte(u, data_tx);
+    }
 }
 
 int main(void)
@@ -71,4 +73,8 @@ int main(void)
     systick_init();
     // test_interrupt();
     // test_timer();
+    while (1)
+    {
+        test_usart();
+    }
 }

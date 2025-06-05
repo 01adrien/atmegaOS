@@ -3,8 +3,11 @@
         {
             "name": "AVR",
             "includePath": [
-                "/usr/lib/avr/include",
-                "/usr/lib/avr/include/avr",
+                "${workspaceFolder}/simavr/simavr/sim",
+                // "/usr/lib/avr/include",
+                // "/usr/lib/avr/include/avr",
+                "/usr/include",
+                "/usr/include/x86_64-linux-gnu",
                 "${workspaceFolder}/**"
             ],
             "defines": [],
@@ -14,8 +17,9 @@
             "intelliSenseMode": "linux-gcc-x64",
             "browse": {
                 "path": [
-                    "/usr/lib/avr/include",
-                    "/usr/lib/avr/include/avr"
+                    "${workspaceFolder}//simavr/simavr/sim",
+                    // "/usr/lib/avr/include",
+                    // "/usr/lib/avr/include/avr"
                 ],
                 "limitSymbolsToIncludedHeaders": true
             }

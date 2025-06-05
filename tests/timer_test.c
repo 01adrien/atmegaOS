@@ -1,6 +1,6 @@
 #include <assert.h>
 #include <stdio.h>
-#include <kernel/timer.h>
+#include "kernel/timer.h"
 
 static int callback_called = 0;
 void test_callback(void *arg)

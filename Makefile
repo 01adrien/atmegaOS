@@ -6,6 +6,7 @@ BINARY := firmware
 MCU      := atmega1284p
 F_CPU    := 16000000UL
 
+SIMAVR   := simavr/simavr/run_avr
 
 # Toolchain
 PREFIX   := avr-
@@ -13,9 +14,8 @@ CC       := $(PREFIX)gcc
 OBJCOPY  := $(PREFIX)objcopy
 GDB      := $(PREFIX)gdb
 
-
 # Target Flags
-CFLAGS   := -mmcu=$(MCU) -DF_CPU=$(F_CPU) -g -I. -O0 -Wall
+CFLAGS   := -mmcu=$(MCU) -DF_CPU=$(F_CPU) -g -I. -I ./simavr/simavr/sim -O0 -Wall
 LDFLAGS  := -mmcu=$(MCU) -Wl,-Map=$(BINARY).map -Wl,--gc-sections
 
 
@@ -59,17 +59,19 @@ $(BINARY).hex: $(BINARY).elf
 	$(Q)$(OBJCOPY) -Oihex $< $@
 
 
-# Simulation avec SimAVR
-sim: $(BINARY).elf
-	@echo "Launching simulation..."
-	$(Q)simavr -m $(MCU) -f $(F_CPU) -g -vcd $(BINARY).elf -v
+# # Simulation avec SimAVR
+# sim: $(BINARY).elf
+# 	@echo "Launching simulation..."
+# 	$(Q)simavr -m $(MCU) -f $(F_CPU) -g -vcd $(BINARY).elf -v
 
 
-# Debug via GDB et SimAVR
-debug:
-	@echo "Starting GDB..."
-	$(Q)$(GDB) -nx --nh $(BINARY).elf -ex "target remote localhost:1234"
+# # Debug via GDB et SimAVR
+# debug:
+# 	@echo "Starting GDB..."
+# 	$(Q)$(GDB) -nx --nh $(BINARY).elf -ex "target remote localhost:1234"
 
+uart:
+	$(Q)$(SIMAVR) -m $(MCU) -f $(F_CPU) -g $(BINARY).elf -v 
 
 # Compilation des sources
 %.o: %.c

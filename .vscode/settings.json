@@ -63,4 +63,5 @@
     "editor.defaultFormatter": "vscode.html-language-features"
   },
   "java.debug.settings.onBuildFailureProceed": true,
+  "C_Cpp.errorSquiggles": "enabled",
 }

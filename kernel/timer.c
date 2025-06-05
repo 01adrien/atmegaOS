@@ -1,5 +1,5 @@
 #include "timer.h"
-#include <libatmega/systick.h>
+#include "libatmega/systick.h"
 #include <stddef.h>
 #include <stdlib.h>
 
