@@ -7,11 +7,6 @@
 // l'idee c'est de lire la config (mode + pupd) pour le port complet
 // et de set la nouvelle conf pour les bits concernés
 
-void gpio_set_af(uint8_t gpio_port, GpioAf afmode, uint8_t pin)
-{
-    // TODO
-}
-
 void gpio_mode_setup(uint8_t reg, GpioMode mode, uint8_t pin)
 {
     volatile uint8_t *ddr = (volatile uint8_t *)(uintptr_t)reg;

@@ -23,8 +23,13 @@ Exemple avec FCPU = 16 000 000 Hz, Baud = 9600 :
 - Mode Asynchrone       → UBRRn = 103   → Baud ≈ 9600
 - Mode Double Vitesse   → UBRRn = 207   → Baud ≈ 9600
 - Mode Synchrone        → UBRRn = 832   → Baud ≈ 9600
+
+Config AF GPIO:
+    - USART0 -> TX port D pin 1
+             -> RX port D pin 0
+    - USART0 -> TX port D pin 3
+             -> RX port D pin 2
 */
-#define BAUD_RATE (9600)
 #define FCPU (16000000UL)
 
 // UCSRxA
@@ -44,6 +49,9 @@ Exemple avec FCPU = 16 000 000 Hz, Baud = 9600 :
 // UCSRxC
 #define UMSEL1 (7)
 #define UMSEL0 (6)
+#define UPM1 (5)
+#define UPM0 (4)
+#define USBS (3)
 #define UCSZ1 (2)
 #define UCSZ0 (1)
 
@@ -55,25 +63,11 @@ typedef enum
 
 typedef enum
 {
-    USART_MODE_ASYNC,        // UMSEL = 00, U2X = 0
-    USART_MODE_ASYNC_DOUBLE, // UMSEL = 00, U2X = 1
-    USART_MODE_SYNC,         // UMSEL = 01
-    USART_MODE_SPI_MASTER    // UMSEL = 11 (MSPIM)
+    USART_MODE_ASYNC,
+    USART_MODE_ASYNC_DOUBLE,
+    USART_MODE_SYNC,
+    USART_MODE_SPI_MASTER
 } UsartMode;
-
-typedef enum
-{
-    USART_MODE_TX_RX,
-} UsartMode;
-
-typedef enum
-{
-    USART_DATA_BITS_5 = 0b000,
-    USART_DATA_BITS_6 = 0b001,
-    USART_DATA_BITS_7 = 0b010,
-    USART_DATA_BITS_8 = 0b011,
-    USART_DATA_BITS_9 = 0b111
-} UsartDataBits;
 
 typedef struct
 {
@@ -84,15 +78,32 @@ typedef struct
     volatile uint8_t ubrrl;
     volatile uint8_t ubrrh;
     volatile uint8_t udr;
-
 } Usart;
 
+typedef enum
+{
+    USART_FORMAT_5N1,
+    USART_FORMAT_6N1,
+    USART_FORMAT_7N1,
+    USART_FORMAT_8N1, // standart 8 data, 0 parity, 1 stop
+    USART_FORMAT_7E1,
+    USART_FORMAT_8E1,
+    USART_FORMAT_7O1,
+    USART_FORMAT_8O1,
+    USART_FORMAT_8N2,
+    USART_FORMAT_9N1, // pas utile ??
+} UsartFrameFormat;
+
 void usart_enable_clock(UsartId id);
-void usart_set_databits(UsartId id, UsartDataBits bits);
+void usart_set_format(UsartId id, UsartFrameFormat format);
 void usart_set_baudrate(UsartId id, uint32_t baudrate);
 void usart_set_mode(UsartId id, UsartMode mode);
 void usart_enable_interrupt(UsartId id);
+void usart_enable_udre_interrupt(UsartId id);
+void usart_disable_udre_interrupt(UsartId id);
 void usart_enable(UsartId id);
+uint8_t usart_read(UsartId id, uint8_t *data);
+void usart_write(UsartId id, uint8_t data);
 
 #endif // _USART_H_
 

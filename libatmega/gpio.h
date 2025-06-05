@@ -34,20 +34,12 @@ typedef enum
     GPIO_PUPD_DISABLE,
 } GpioPupd;
 
-// fonction alternative pour gpio (UART, PWM...)
-typedef enum
-{
-    GPIO_AF1,
-    // ....
-} GpioAf;
-
-void gpio_set_af(uint8_t gpio_port, GpioAf afmode, uint8_t pin);
 void gpio_mode_setup(uint8_t gpio_port, GpioMode mode, uint8_t pin);
 void gpio_set(uint8_t gpio_port, uint8_t pin);
 void gpio_clear(uint8_t gpio_port, uint8_t pin);
 uint8_t gpio_get(uint8_t gpio_port, uint8_t pin);
 void gpio_toggle(uint8_t gpio_port, uint8_t pin);
-uint8_t gpio_port_read(uint8_t gpio_port);
+uint8_t gpio_pins_read(uint8_t gpio_port);
 void gpio_port_write(uint8_t gpio_port, uint8_t data);
 
 #endif // _GPIO_H_

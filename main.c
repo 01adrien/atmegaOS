@@ -1,6 +1,7 @@
 #include <libatmega/systick.h>
 #include <libatmega/gpio.h>
 #include <libatmega/usart.h>
+#include <libatmega/interrupt.h>
 #include <kernel/timer.h>
 
 #define PIN (2)
@@ -55,12 +56,14 @@ void test_timer()
 void test_usart()
 {
     UsartId u = USART0;
+    interrupt_disable();
     usart_enable_clock(u);
-    usart_set_databits(u, USART_DATA_BITS_8);
+    usart_set_format(u, USART_FORMAT_8N1);
     usart_set_baudrate(u, BAUD_RATE);
     usart_set_mode(u, USART_MODE_ASYNC);
     usart_enable_interrupt(u);
     usart_enable(u);
+    interrupt_enable();
 }
 
 int main(void)

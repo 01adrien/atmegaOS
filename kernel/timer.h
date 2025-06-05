@@ -27,7 +27,7 @@ typedef struct Timer
     uint32_t duration_ms;  // durée totale
     uint32_t remaining_ms; // temps restant
     TimerCallback callback;
-    void *args; // pointeur vers les argument(s) du callback
+    void *args; // pointeur vers argument(s) du callback
     struct Timer *next;
 } Timer;
 

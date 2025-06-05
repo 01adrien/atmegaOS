@@ -1,6 +1,5 @@
 #include "interrupt.h"
 #include "interrupt_handlers.h"
-// TODO fonction dispatching pour les interrupts
 
 // __vector_ = reset (pas touche!)
 

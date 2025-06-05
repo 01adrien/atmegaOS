@@ -32,6 +32,9 @@ static inline void interrupt_enable(void)
     __asm__ __volatile__("sei" ::: "memory");
 }
 
+// Sauvegarder SREG avant cli() pour mémoriser l’état des interruptions (activées ou non).
+// Restaurer SREG après la section critique afin de revenir exactement à cet état initial.
+// peut etre faire une macro genre ATOMIC_BLOCK
 static inline void interrupt_disable(void)
 {
     __asm__ __volatile__("cli" ::: "memory");

@@ -1,16 +1,56 @@
 #include "usart.h"
+#include "interrupt.h"
+/*
+USART_RX_vect (RX Complete Interrupt Flag – RXC):
+Déclenchée dès qu’un octet est reçu dans le registre UDRn. Le matériel a déjà transféré
+l’octet reçu dans UDRn et mis à 1 le bit RXCn dans UCSRnA.
 
-void usart0_rx_handler(void) {}
-void usart0_udre_handler(void) {}
-void usart0_tx_handler(void) {}
-void usart1_rx_handler(void) {}
-void usart1_udre_handler(void) {}
-void usart1_tx_handler(void) {}
+USART_UDRE_vect (Data Register Empty Interrupt Flag – UDRE):
+Déclenchée quand le buffer d’émission (UDRn) est vide et prêt à recevoir un nouveau octet.
+Le bit UDREn dans UCSRnA passe à 1 dès qu’on a vidé UDRn vers le décalage d’émission.
+
+USART_TX_vect (Transmission Complete Interrupt Flag – TXC):
+Déclenchée quand la transmission du dernier bit d’un octet vient de se terminer
+(tous les bits ont été envoyés sur la ligne). Le bit TXCn dans UCSRnA passe à 1.
+
+Dans les fonctions usart_read et usart_write
+On désactive les interruptions pour éviter qu'une ISR modifie rx_byte ou rx_ready
+pendant qu'on les lit ou qu'on les modifie ici.
+Exemple : si une interruption RX survient juste après qu'on ait lu rx_ready,
+rx_byte pourrait être remplacé avant qu'on l'utilise → bug.
+On réactive les interruptions juste après la lecture sécurisée.
+TODO Le buffer circulaire regle le probleme
+*/
 
 static Usart *usarts[] = {
     [USART0] = (Usart *)USART0_BASE,
     [USART1] = (Usart *)USART1_BASE,
 };
+
+static volatile uint8_t rx_byte;  // buffer de réception (1 octet)
+static volatile uint8_t rx_ready; // drapeau = 1 si rx_byte contient un octet non lu
+
+static volatile uint8_t tx_byte; // buffer d’émission (1 octet)
+static volatile uint8_t tx_busy; // drapeau = 1 si un envoi est en cours
+
+void usart0_rx_handler(void)
+{
+    // check pour erreur
+    Usart *u = usarts[USART0];
+    uint8_t data = usarts[USART0]->udr; // lit UDR0 → efface RXC0
+    rx_byte = data;
+    rx_ready = 1;
+}
+void usart0_udre_handler(void)
+{
+    Usart *u = usarts[USART0];
+    u->udr = tx_byte;
+    usart_disable_udre_interrupt(USART0);
+    tx_busy = 0;
+}
+
+void usart1_rx_handler(void) {}
+void usart1_udre_handler(void) {}
 
 void usart_enable_clock(UsartId id)
 {
@@ -21,6 +61,56 @@ void usart_enable_clock(UsartId id)
         break;
     case USART1:
         MMIO8(PRR0) &= ~(1 << PRUSART1);
+        break;
+    default:
+        break;
+    }
+}
+
+void usart_set_format(UsartId id, UsartFrameFormat format)
+{
+    Usart *u = usarts[id];
+
+    // Reset config
+    u->ucsrb &= ~(1 << UCSZ2);
+    u->ucsrc &= ~((1 << UCSZ1) | (1 << UCSZ0) | (1 << UPM1) | (1 << UPM0) | (1 << USBS));
+
+    switch (format)
+    {
+    case USART_FORMAT_5N1:
+        break;
+    case USART_FORMAT_6N1:
+        u->ucsrc |= (1 << UCSZ0);
+        break;
+    case USART_FORMAT_7N1:
+        u->ucsrc |= (1 << UCSZ1);
+        break;
+    case USART_FORMAT_8N1:
+        u->ucsrc |= (1 << UCSZ1) | (1 << UCSZ0);
+        break;
+    case USART_FORMAT_9N1:
+        u->ucsrb |= (1 << UCSZ2);
+        u->ucsrc |= (1 << UCSZ1) | (1 << UCSZ0);
+        break;
+    case USART_FORMAT_7E1:
+        u->ucsrc |= (1 << UCSZ1);
+        u->ucsrc |= (1 << UPM1);
+        break;
+    case USART_FORMAT_8E1:
+        u->ucsrc |= (1 << UCSZ1) | (1 << UCSZ0);
+        u->ucsrc |= (1 << UPM1);
+        break;
+    case USART_FORMAT_7O1:
+        u->ucsrc |= (1 << UCSZ1);
+        u->ucsrc |= (1 << UPM1) | (1 << UPM0);
+        break;
+    case USART_FORMAT_8O1:
+        u->ucsrc |= (1 << UCSZ1) | (1 << UCSZ0);
+        u->ucsrc |= (1 << UPM1) | (1 << UPM0);
+        break;
+    case USART_FORMAT_8N2:
+        u->ucsrc |= (1 << UCSZ1) | (1 << UCSZ0);
+        u->ucsrc |= (1 << USBS);
         break;
     default:
         break;
@@ -100,18 +190,44 @@ void usart_enable_interrupt(UsartId id)
     u->ucsrb |= ((1 << RXCIE) | (1 << TXCIE) | (1 << UDRIE));
 }
 
+void usart_enable_udre_interrupt(UsartId id)
+{
+    Usart *u = usarts[id];
+    u->ucsrb |= (1 << UDRIE);
+}
+
+void usart_disable_udre_interrupt(UsartId id)
+{
+    Usart *u = usarts[id];
+    u->ucsrb &= ~(1 << UDRIE);
+}
+
 void usart_enable(UsartId id)
 {
+    // Le CPU configure automatiquement les pins GPIO pour les fonctions alternatives
     Usart *usart = usarts[id];
     usart->ucsrb |= ((1 << RXEN) | (1 << TXEN));
 }
 
 uint8_t usart_read(UsartId id, uint8_t *data)
 {
-    // utiliser UDRx
+    Usart *u = usarts[id];
+    if (!rx_ready)
+        return 0;
+    interrupt_disable();
+    *data = rx_byte;
+    rx_ready = 0;
+    interrupt_enable();
+    return 1;
 }
 
 void usart_write(UsartId id, uint8_t data)
 {
-    // utiliser UDRx
+    while (tx_busy)
+        __asm__("nop");
+    interrupt_disable();
+    tx_byte = data;
+    tx_busy = 1;
+    usart_enable_udre_interrupt(id);
+    interrupt_enable();
 }
