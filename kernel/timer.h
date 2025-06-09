@@ -1,9 +1,7 @@
-#if !defined(_TIMER_H_)
-#define _TIMER_H_
+#if !defined(TIMER_H)
+#define TIMER_H
 
-#include <stdint.h>
-
-#define MAX_TIMERS (8)
+#include "common.h"
 
 typedef enum
 {
@@ -31,11 +29,11 @@ typedef struct Timer
     struct Timer *next;
 } Timer;
 
-void timer_setup(void);
+void timer_init(void);
 void timer_start(Timer *t, uint32_t ms, TimerType type, TimerCallback cb, void *ctx);
 Timer *timer_alloc();
 const Timer *timer_get();
 void timer_tick(void); // à appeler dans l'ISR
 void timer_poll(void); // à appeler dans la boucle principale pour ne pas surcharger ISR
 
-#endif // _TIMER_H_
+#endif // TIMER_H

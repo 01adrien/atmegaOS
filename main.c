@@ -3,78 +3,56 @@
 #include "libatmega/usart.h"
 #include "libatmega/interrupt.h"
 #include "kernel/timer.h"
+#include "kernel/io.h"
 
 #define PIN (2)
 #define PORT (PORTA)
-#define BAUD_RATE (115200)
-
-void test_interrupt()
-{
-    gpio_mode_setup(PORT, GPIO_MODE_OUTPUT, PIN);
-    uint64_t last = 0;
-    uint64_t sec = 0;
-    while (1)
-    {
-        {
-            if (get_tick() - last >= 1000)
-            {
-                gpio_toggle(PORT, PIN);
-                last = get_tick();
-                sec++;
-            }
-        }
-    }
-}
 
 void callback1(void *arg)
 {
-    uint64_t t = get_tick();
+    printf("callback 1\n");
 }
 
 void callback2(void *arg)
 {
-    uint64_t t = get_tick();
+    printf("callback 2\n");
 }
 
 void callback3(void *arg)
 {
-    uint64_t t = get_tick();
+    printf("callback 3\n");
 }
 
 void test_timer()
 {
-    timer_start(timer_alloc(), 3000, TIMER_PERIODIC, callback1, NULL);
-    timer_start(timer_alloc(), 2000, TIMER_PERIODIC, callback2, NULL);
-    timer_start(timer_alloc(), 1000, TIMER_PERIODIC, callback3, NULL);
+    timer_init();
+    timer_start(timer_alloc(), 3000, TIMER_ONESHOT, callback1, NULL);
+    timer_start(timer_alloc(), 2000, TIMER_ONESHOT, callback2, NULL);
+    timer_start(timer_alloc(), 1000, TIMER_ONESHOT, callback3, NULL);
+
+    while (1)
+    {
+        timer_poll();
+    }
 }
 
-void test_usart()
+void usart0_init()
 {
     UsartId u = USART0;
-    interrupt_disable();
-    usart_enable_clock(u);
-    usart_set_format(u, USART_FORMAT_8N1);
-    usart_set_baudrate(u, BAUD_RATE);
-    usart_set_mode(u, USART_MODE_ASYNC);
-    usart_enable_interrupt(u);
-    usart_enable(u);
-    interrupt_enable();
-
-    if (usart_data_available())
-    {
-        uint8_t data_rx = usart_read_byte(u);
-        uint8_t data_tx = data_rx + 5;
-        usart_write_byte(u, data_tx);
-    }
+    ATOMIC_BLOCK({
+        usart_enable_clock(u);
+        usart_set_format(u, USART_FORMAT_8N1);
+        usart_set_baudrate(u, BAUD_RATE);
+        usart_set_mode(u, USART_MODE_ASYNC);
+        usart_enable_interrupt(u);
+        usart_enable(u);
+    });
 }
 
 int main(void)
 {
     systick_init();
-    // test_interrupt();
-    // test_timer();
-    while (1)
-    {
-        test_usart();
-    }
+    usart0_init();
+    io_init();
+    test_timer();
 }

@@ -1,5 +1,5 @@
-#if !defined(_GPIO_H_)
-#define _GPIO_H_
+#if !defined(GPIO_H)
+#define GPIO_H
 
 #include "memory_map.h"
 /*
@@ -42,4 +42,4 @@ void gpio_toggle(uint8_t gpio_port, uint8_t pin);
 uint8_t gpio_pins_read(uint8_t gpio_port);
 void gpio_port_write(uint8_t gpio_port, uint8_t data);
 
-#endif // _GPIO_H_
+#endif // GPIO_H

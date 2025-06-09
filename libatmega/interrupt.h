@@ -1,5 +1,7 @@
-#if !defined(_INTERRUPT_H_)
-#define _INTERRUPT_H_
+#if !defined(INTERRUPT_H)
+#define INTERRUPT_H
+
+#include "memory_map.h"
 
 /*
 Les vecteurs d’interruptions se trouvent en mémoire Flash à partir de l’adresse 0x0000,
@@ -27,6 +29,14 @@ On utilise de l’assembleur inline car il n'existe pas d'équivalent C standard
 pour activer/désactiver les interruptions au niveau machine.
 */
 
+static inline int interrupt_status(void)
+{
+    uint8_t sreg;
+    __asm__ __volatile__("in %[result], __SREG__"
+                         : [result] "=r"(sreg));
+    return (sreg & (1 << 7)) != 0; // Bit I (7) = 1 si interruptions activées
+}
+
 static inline void interrupt_enable(void)
 {
     __asm__ __volatile__("sei" ::: "memory");
@@ -39,6 +49,19 @@ static inline void interrupt_disable(void)
 {
     __asm__ __volatile__("cli" ::: "memory");
 }
+
+#define ATOMIC_BLOCK(code_block)                                    \
+    do                                                              \
+    {                                                               \
+        uint8_t sreg;                                               \
+        __asm__ __volatile__("in %[s], __SREG__ \n\t"               \
+                             "cli"                                  \
+                             : [s] "=r"(sreg));                     \
+        {                                                           \
+            code_block                                              \
+        }                                                           \
+        __asm__ __volatile__("out __SREG__, %[s]" ::[s] "r"(sreg)); \
+    } while (0)
 
 void __vector_1(void) __attribute__((signal, used));
 void __vector_2(void) __attribute__((signal, used));
@@ -70,4 +93,4 @@ void __vector_27(void) __attribute__((signal, used));
 void __vector_28(void) __attribute__((signal, used));
 void __vector_29(void) __attribute__((signal, used));
 
-#endif // _INTERRUPT_H_
+#endif // INTERRUPT_H

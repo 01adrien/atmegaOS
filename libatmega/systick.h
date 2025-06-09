@@ -1,5 +1,5 @@
-#if !defined(_SYSTICK_H_)
-#define _SYSTICK_H_
+#if !defined(SYSTICK_H)
+#define SYSTICK_H
 
 #include "memory_map.h"
 
@@ -50,4 +50,4 @@ uint64_t get_tick(void);
 void systick_increment(void);
 void systick_register_hook(void (*callback)(void));
 
-#endif // _SYSTICK_H_
+#endif // SYSTICK_H

@@ -1,5 +1,5 @@
-#ifndef _COUNTER_H_
-#define _COUNTER_H_
+#ifndef COUNTER_H
+#define COUNTER_H
 
 #include "memory_map.h"
 
@@ -72,4 +72,4 @@ void counter_set_prescaler(CounterId id, CounterPrescaler prescaler);
 void counter_set_oc_value(CounterId id, uint8_t value, CounterCompare cmp);
 void counter_set_ctc_top(CounterId id, uint8_t value);
 
-#endif // _COUNTER_H_
+#endif // COUNTER_H

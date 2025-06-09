@@ -21,13 +21,13 @@ attention au timer périodique, le retirer de la liste et le reinserer
 a la bonne position.
 */
 
-Timer timers[8];
-static Timer *head = NULL;
+static uint8_t timers_count = 0;
+static Timer *timers = NULL;
+static Timer timers_pool[MAX_TIMERS] = {0};
 
-void timer_setup(void)
+void timer_init(void)
 {
     systick_register_hook(timer_tick);
-    systick_init();
 }
 
 void timer_start(Timer *t, uint32_t ms, TimerType type, TimerCallback callback, void *args)
@@ -39,25 +39,20 @@ void timer_start(Timer *t, uint32_t ms, TimerType type, TimerCallback callback, 
     t->remaining_ms = ms;
     t->callback = callback;
     t->args = args;
-    t->next = head;
-    head = t;
+    t->next = timers;
+    timers = t;
 }
 
 Timer *timer_alloc(void)
 {
-    for (int i = 0; i < MAX_TIMERS; ++i)
-    {
-        if (timers[i].state == TIMER_IDLE)
-        {
-            return &timers[i];
-        }
-    }
-    return NULL; // Pas de timer disponible
+    return timers_count == MAX_TIMERS
+               ? NULL
+               : timers_pool + (timers_count++);
 }
 
-const Timer *timer_get()
+const Timer *timer_get(void)
 {
-    return head;
+    return timers;
 }
 
 /*
@@ -67,7 +62,7 @@ qu'incrementer les timers, le callback et appellé hors interrupt
 */
 void timer_tick(void) // executer dans l'ISR 18 (timer0 ovf)
 {
-    Timer *t = head;
+    Timer *t = timers;
     while (t)
     {
         if (t->state == TIMER_ACTIVE && t->remaining_ms > 0)
@@ -84,8 +79,8 @@ void timer_tick(void) // executer dans l'ISR 18 (timer0 ovf)
 
 void timer_poll(void)
 {
-    Timer *t = head;
-    Timer *p = NULL;
+    Timer *t = timers;
+    // Timer *p = NULL;
     while (t)
     {
         if (t->state == TIMER_DONE && t->callback)
@@ -102,7 +97,7 @@ void timer_poll(void)
                 t->state = TIMER_ACTIVE;
             }
         }
-        p = t;
+        // p = t;
         t = t->next;
     }
 }

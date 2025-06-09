@@ -12,6 +12,7 @@ TARGET := my_sim
 
 all: $(TARGET)
 
+.PHONY: $(TARGET)
 
 $(TARGET): $(OBJ)
 	@$(CC) $(OBJ) -o $@ $(LDFLAGS)
@@ -19,6 +20,10 @@ $(TARGET): $(OBJ)
 debug:
 	@echo "Starting GDB..."
 	avr-gdb -nx --nh ../firmware.elf -ex "target remote localhost:1234"
+
+sim: $(TARGET)
+	@echo "Launching simulation..."
+	./$(TARGET)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@

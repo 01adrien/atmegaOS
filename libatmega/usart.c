@@ -17,7 +17,7 @@ Dans les fonctions usart_read et usart_write
 On désactive les interruptions pour éviter qu'une ISR modifie rx_byte ou rx_ready
 pendant qu'on les lit ou qu'on les modifie ici.
 Exemple : si une interruption RX survient juste après qu'on ait lu rx_ready,
-rx_byte pourrait être remplacé avant qu'on l'utilise → bug.
+rx_byte pourrait être remplacé avant qu'on l'utilise.
 On réactive les interruptions juste après la lecture sécurisée.
 TODO Le buffer circulaire regle le probleme
 */
@@ -27,11 +27,11 @@ static Usart *usarts[] = {
     [USART1] = (Usart *)USART1_BASE,
 };
 
-static volatile uint8_t rx_byte;  // buffer de réception (1 octet)
-static volatile uint8_t rx_ready; // drapeau = 1 si rx_byte contient un octet non lu
+static volatile uint8_t rx_byte;
+static volatile uint8_t rx_ready;
 
-static volatile uint8_t tx_byte; // buffer d’émission (1 octet)
-static volatile uint8_t tx_busy; // drapeau = 1 si un envoi est en cours
+static volatile uint8_t tx_byte;
+static volatile uint8_t tx_busy;
 
 void usart0_rx_handler(void)
 {
@@ -194,13 +194,14 @@ void usart_enable(UsartId id)
 
 uint8_t usart_read_byte(UsartId id)
 {
-    Usart *u = usarts[id];
+    // Usart *u = usarts[id];
     if (!rx_ready)
         return 0;
-    interrupt_disable();
-    uint8_t data = rx_byte;
-    rx_ready = 0;
-    interrupt_enable();
+    uint8_t data;
+    ATOMIC_BLOCK({
+        data = rx_byte;
+        rx_ready = 0;
+    });
     return data;
 }
 
@@ -208,11 +209,11 @@ void usart_write_byte(UsartId id, uint8_t data)
 {
     while (tx_busy)
         __asm__("nop");
-    interrupt_disable();
-    tx_byte = data;
-    tx_busy = 1;
-    usart_enable_udre_interrupt(id);
-    interrupt_enable();
+    ATOMIC_BLOCK({
+        tx_byte = data;
+        tx_busy = 1;
+        usart_enable_udre_interrupt(id);
+    });
 }
 
 uint8_t usart_data_available()

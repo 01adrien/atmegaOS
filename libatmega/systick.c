@@ -63,9 +63,10 @@ uint64_t get_tick(void)
     // desactiver les interruptions globales pour lire tick
     // car si plus de 8 bits il faut plusieurs operations
     // il pourrait y avoir une autre interrupt
-    interrupt_disable();
-    uint64_t t = tick;
-    interrupt_enable();
+    uint64_t t;
+    ATOMIC_BLOCK({
+        t = tick;
+    });
     return t;
 }
 

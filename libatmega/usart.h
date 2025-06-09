@@ -1,5 +1,5 @@
-#if !defined(_USART_H_)
-#define _USART_H_
+#if !defined(USART_H)
+#define USART_H
 
 #include "memory_map.h"
 
@@ -104,9 +104,9 @@ void usart_disable_udre_interrupt(UsartId id);
 void usart_enable(UsartId id);
 uint8_t usart_read_byte(UsartId id);
 void usart_write_byte(UsartId id, uint8_t byte);
-
 uint8_t usart_data_available();
-#endif // _USART_H_
+
+#endif // USART_H
 
 /*
 Exemple : configurer sim-avr pour l’USART
