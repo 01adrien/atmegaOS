@@ -26,9 +26,9 @@ void callback3(void *arg)
 void test_timer()
 {
     timer_init();
-    timer_start(timer_alloc(), 3000, TIMER_ONESHOT, callback1, NULL);
-    timer_start(timer_alloc(), 2000, TIMER_ONESHOT, callback2, NULL);
-    timer_start(timer_alloc(), 1000, TIMER_ONESHOT, callback3, NULL);
+    timer_start(3000, TIMER_ONESHOT, callback1, NULL);
+    timer_start(2000, TIMER_ONESHOT, callback2, NULL);
+    timer_start(1000, TIMER_ONESHOT, callback3, NULL);
 
     while (1)
     {

@@ -29,27 +29,17 @@ On utilise de l’assembleur inline car il n'existe pas d'équivalent C standard
 pour activer/désactiver les interruptions au niveau machine.
 */
 
-static inline int interrupt_status(void)
-{
-    uint8_t sreg;
-    __asm__ __volatile__("in %[result], __SREG__"
-                         : [result] "=r"(sreg));
-    return (sreg & (1 << 7)) != 0; // Bit I (7) = 1 si interruptions activées
-}
-
 static inline void interrupt_enable(void)
 {
     __asm__ __volatile__("sei" ::: "memory");
 }
 
-// Sauvegarder SREG avant cli() pour mémoriser l’état des interruptions (activées ou non).
-// Restaurer SREG après la section critique afin de revenir exactement à cet état initial.
-// peut etre faire une macro genre ATOMIC_BLOCK
 static inline void interrupt_disable(void)
 {
     __asm__ __volatile__("cli" ::: "memory");
 }
 
+// toujours pas hyper safe
 #define ATOMIC_BLOCK(code_block)                                    \
     do                                                              \
     {                                                               \

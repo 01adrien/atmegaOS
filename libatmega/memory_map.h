@@ -1,3 +1,8 @@
+#if !defined(MEMORY_MAP_H)
+#define MEMORY_MAP_H
+
+#include <stdint.h>
+#include <stddef.h>
 /*
 memory_map.h
 
@@ -13,12 +18,6 @@ Le processeur lit et écrit ces adresses comme de la mémoire,
 mais les données sont interprétées comme des commandes ou
 des informations spécifiques aux périphériques.
 */
-
-#if !defined(_MEMORY_MAP_H_)
-#define _MEMORY_MAP_H_
-
-#include <stdint.h>
-#include <stddef.h>
 
 /*
 La macro MMIOX(addr) retourne une lvalue (référence mémoire modifiable)
@@ -77,4 +76,4 @@ un registre matériel comme une variable classique.
 // USART 1
 #define USART1_BASE (0xC8)
 
-#endif // _MEMORY_MAP_H_
+#endif // MEMORY_MAP_H

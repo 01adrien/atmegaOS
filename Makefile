@@ -59,20 +59,6 @@ $(BINARY).hex: $(BINARY).elf
 	$(Q)$(OBJCOPY) -Oihex $< $@
 
 
-# # Simulation avec SimAVR
-# sim: $(BINARY).elf
-# 	@echo "Launching simulation..."
-# 	$(Q)simavr -m $(MCU) -f $(F_CPU) -g -vcd $(BINARY).elf -v
-
-
-# # Debug via GDB et SimAVR
-# debug:
-# 	@echo "Starting GDB..."
-# 	$(Q)$(GDB) -nx --nh $(BINARY).elf -ex "target remote localhost:1234"
-
-uart:
-	$(Q)$(SIMAVR) -m $(MCU) -f $(F_CPU) -g $(BINARY).elf -v 
-
 # Compilation des sources
 %.o: %.c
 	$(Q)$(CC) $(CFLAGS) -MD -c $< -o $@
@@ -80,8 +66,6 @@ uart:
 
 %.o: %.S
 	$(Q)$(CC) $(CFLAGS) -c $< -o $@
-
-
 
 
 # Genere l'asm du projet a partir du binaire (decompilation)
@@ -102,4 +86,4 @@ lst: $(LST_FILES)
 
 # Nettoyage
 clean:
-	$(Q)rm -f $(BINARY).* */*.o */*.d */*.lst *.lst *.d *.o
+	$(Q)rm -f $(BINARY).* */*.o */*.d */*.lst *.lst *.d *.o *.asm

@@ -29,10 +29,9 @@ typedef struct Timer
     struct Timer *next;
 } Timer;
 
-void timer_init(void);
-void timer_start(Timer *t, uint32_t ms, TimerType type, TimerCallback cb, void *ctx);
-Timer *timer_alloc();
-const Timer *timer_get();
+bool timer_start(uint32_t ms, TimerType type, TimerCallback cb, void *ctx);
+Timer *timer_alloc(void);
+const Timer *timer_get(void);
 void timer_tick(void); // à appeler dans l'ISR
 void timer_poll(void); // à appeler dans la boucle principale pour ne pas surcharger ISR
 

@@ -18,6 +18,7 @@ typedef struct
     uint8_t priority;
     TaskState state;
     TaskFunction function;
+    Task *next;
 } Task;
 
 Task *task_create(uint8_t priority, TaskFunction func);

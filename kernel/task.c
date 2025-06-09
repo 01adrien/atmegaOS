@@ -4,7 +4,7 @@ extern uint8_t tasks_count;
 extern Task tasks_pool[];
 extern Task *tasks;
 
-Task *task_alloc()
+static inline Task *task_alloc()
 {
     return tasks_count == MAX_TASKS
                ? NULL
@@ -20,6 +20,7 @@ Task *task_create(uint8_t priority, TaskFunction func)
         t->state = TASK_READY;
         t->priority = priority;
         t->function = func;
+        t->next = NULL;
         return t;
     }
     return NULL;

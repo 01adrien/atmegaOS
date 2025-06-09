@@ -19,16 +19,6 @@ Par exemple, si chaque bit prend 0,001 seconde (1 milliseconde), alors le baud r
 | Synchrone                    | UBRRn = (FCPU / (2 × Baud)) - 1    |
 +------------------------------------+------------------------------+
 
-Exemple avec FCPU = 16 000 000 Hz, Baud = 9600 :
-- Mode Asynchrone       → UBRRn = 103   → Baud ≈ 9600
-- Mode Double Vitesse   → UBRRn = 207   → Baud ≈ 9600
-- Mode Synchrone        → UBRRn = 832   → Baud ≈ 9600
-
-Config AF GPIO:
-    - USART0 -> TX port D pin 1
-             -> RX port D pin 0
-    - USART0 -> TX port D pin 3
-             -> RX port D pin 2
 */
 #define FCPU (16000000UL)
 
@@ -107,20 +97,3 @@ void usart_write_byte(UsartId id, uint8_t byte);
 uint8_t usart_data_available();
 
 #endif // USART_H
-
-/*
-Exemple : configurer sim-avr pour l’USART
-Avec sim-avr, tu peux utiliser l’option -u pour connecter l’USART1 à un pseudo-terminal.
-Par exemple, lancer sim-avr avec :
-simavr -m atmega1284pp -f 16000000 -u /dev/pts/3 firmware.elf
-Cela redirige l’USART vers /dev/pts/3 (un pseudo-terminal).
-Comment trouver ou créer ce port ?
-    Tu peux créer une paire de pseudo-terminaux avec socat :
-    socat -d -d PTY,raw,echo=0 PTY,raw,echo=0
-Cette commande affiche deux ports virtuels, par exemple /dev/pts/3 et /dev/pts/4.
-    Tu passes un des deux à sim-avr en -u (USART), et tu connectes l’autre avec screen ou un autre terminal.
-Résumé
-    /dev/ttyUSB0 est juste un exemple d’un port série physique ou virtuel sur ton PC.
-    Avec sim-avr, tu peux simuler un port série virtuel (pseudo-terminal) vers lequel rediriger l’USART.
-    Ensuite, tu ouvres ce port avec screen ou autre pour communiquer.
-*/

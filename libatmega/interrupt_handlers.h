@@ -1,5 +1,5 @@
-#ifndef _INTERRUPT_HANDLERS_H
-#define _INTERRUPT_HANDLERS_H
+#ifndef INTERRUPT_HANDLERS_H
+#define INTERRUPT_HANDLERS_H
 
 static inline void blocking_handler(void)
 {
@@ -32,4 +32,4 @@ __attribute__((weak)) void usart1_rx_handler(void) { null_handler(); }
 __attribute__((weak)) void usart1_udre_handler(void) { null_handler(); }
 __attribute__((weak)) void usart1_tx_handler(void) { null_handler(); }
 
-#endif // _INTERRUPT_HANDLERS_H
+#endif // INTERRUPT_HANDLERS_H

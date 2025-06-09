@@ -1,7 +1,5 @@
 #include "timer.h"
 #include "libatmega/systick.h"
-#include <stddef.h>
-#include <stdlib.h>
 
 /*
 Passez a une delta liste plus tard
@@ -25,29 +23,29 @@ static uint8_t timers_count = 0;
 static Timer *timers = NULL;
 static Timer timers_pool[MAX_TIMERS] = {0};
 
-void timer_init(void)
-{
-    systick_register_hook(timer_tick);
-}
-
-void timer_start(Timer *t, uint32_t ms, TimerType type, TimerCallback callback, void *args)
-{
-
-    t->state = TIMER_ACTIVE;
-    t->type = type;
-    t->duration_ms = ms;
-    t->remaining_ms = ms;
-    t->callback = callback;
-    t->args = args;
-    t->next = timers;
-    timers = t;
-}
-
 Timer *timer_alloc(void)
 {
     return timers_count == MAX_TIMERS
                ? NULL
                : timers_pool + (timers_count++);
+}
+
+bool timer_start(uint32_t ms, TimerType type, TimerCallback callback, void *args)
+{
+    Timer *t = timer_alloc();
+    if (t)
+    {
+        t->state = TIMER_ACTIVE;
+        t->type = type;
+        t->duration_ms = ms;
+        t->remaining_ms = ms;
+        t->callback = callback;
+        t->args = args;
+        t->next = timers;
+        timers = t;
+        return true;
+    }
+    return false;
 }
 
 const Timer *timer_get(void)
@@ -58,9 +56,9 @@ const Timer *timer_get(void)
 /*
 les timer ne peuvent pas se decaler car ce code est executer a chaque ms
 et le cpu peut faire 16000 operation par ms et timer_tick ne fait
-qu'incrementer les timers, le callback et appellé hors interrupt
+qu'incrementer les timers, le callback et appellé hors interrupt (polling)
 */
-void timer_tick(void) // executer dans l'ISR 18 (timer0 ovf)
+void timer_tick(void)
 {
     Timer *t = timers;
     while (t)
@@ -80,7 +78,6 @@ void timer_tick(void) // executer dans l'ISR 18 (timer0 ovf)
 void timer_poll(void)
 {
     Timer *t = timers;
-    // Timer *p = NULL;
     while (t)
     {
         if (t->state == TIMER_DONE && t->callback)
@@ -97,7 +94,6 @@ void timer_poll(void)
                 t->state = TIMER_ACTIVE;
             }
         }
-        // p = t;
         t = t->next;
     }
 }

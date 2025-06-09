@@ -19,8 +19,6 @@ avr_t *avr = NULL;
 avr_vcd_t vcd_file;
 i2c_eeprom_t ee;
 
-// picocom /dev/pts/7 --baud 115200 --echo
-
 int main(int argc, char const *argv[])
 {
     elf_firmware_t f = {0};
@@ -53,7 +51,7 @@ int main(int argc, char const *argv[])
         8 /* bits */,
         " TWSR ");
 
-    // Lien vers UART0 → terminal PTY
+    // Lien vers UART0 => terminal PTY
     uart_pty_t uart;
     uart_pty_init(avr, &uart);
     uart_pty_connect(&uart, '0');
